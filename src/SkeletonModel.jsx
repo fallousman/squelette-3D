@@ -37,7 +37,7 @@ export default function SkeletonModel() {
   );
 }
 */
-import React, { Suspense, useState } from "react";
+/*import React, { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 
@@ -76,4 +76,40 @@ export default function SkeletonModel({ modelPath }) {
       </Canvas>
     </div>
   );
+}*/
+
+
+import React, { Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+
+function Model({ modelPath }) {
+  const { scene } = useGLTF(modelPath);
+  return <primitive object={scene} scale={1.5} />;
 }
+
+// Préchargement pour améliorer les performances (chemins relatifs, sans slash initial)
+useGLTF.preload("models/skeleton.glb");
+useGLTF.preload("models/body.glb");
+useGLTF.preload("models/heart.glb");
+useGLTF.preload("models/organ.glb");
+
+export default function SkeletonModel({ modelPath }) {
+  return (
+    <Canvas style={{ height: "500px", background: "#f0f0f0" }} camera={{ position: [0, 1, 5], fov: 50 }}>
+      {/* Lumières */}
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[5, 5, 5]} intensity={1} />
+
+      {/* Modèle avec fallback pour garder la taille du canvas */}
+      <Suspense fallback={<div style={{ height: "500px", background: "#f0f0f0" }}>Chargement du modèle...</div>}>
+        <Model modelPath={modelPath} />
+      </Suspense>
+
+      {/* Contrôle de la caméra */}
+      <OrbitControls enableZoom={true} />
+    </Canvas>
+  );
+}
+
+

@@ -156,18 +156,76 @@ function App() {
 
 export default App;
 */
-import React from "react";
-import CubeModel from "./CubeModel";
+import React, { useState } from "react";
+import SkeletonModel from "./SkeletonModel";
+import "./App.css";
 
 function App() {
+  const [selectedModel, setSelectedModel] = useState("skeleton");
+
+  const models = {
+    skeleton: { 
+      path: "models/skeleton.glb", 
+      name: "Squelette",
+      description: "Le squelette humain est la charpente du corps, constitué de 206 os qui assurent le soutien, la protection des organes et la mobilité."
+    },
+    body: { 
+      path: "models/body.glb", 
+      name: "Corps humain",
+      description: "Le corps humain est un système complexe formé de différents organes, tissus et cellules travaillant ensemble pour maintenir la vie."
+    },
+    heart: { 
+      path: "models/heart.glb", 
+      name: "Cœur",
+      description: "Le cœur est un organe musculaire qui pompe le sang dans tout le corps, assurant l'apport d'oxygène et de nutriments aux tissus."
+    },
+    organ: { 
+      path: "models/organ.glb", 
+      name: "Autre Cœur",
+      description: "Une autre représentation du cœur humain, utile pour visualiser sa structure interne et son rôle vital dans la circulation sanguine."
+    },
+  };
+
   return (
     <div className="App">
-      <h1>Test 3D Cube</h1>
-      <CubeModel />
+      <h1>Exploration du Corps Humain en 3D</h1>
+
+      {/* Boutons de sélection */}
+      <div style={{ marginBottom: "20px" }}>
+        {Object.keys(models).map((key) => (
+          <button
+            key={key}
+            onClick={() => setSelectedModel(key)}
+            style={{
+              margin: "5px",
+              padding: "10px 15px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              cursor: "pointer",
+              backgroundColor: selectedModel === key ? "#4cafef" : "#fff",
+              color: selectedModel === key ? "#fff" : "#000",
+            }}
+          >
+            {models[key].name}
+          </button>
+        ))}
+      </div>
+
+      {/* Affichage du modèle 3D */}
+      <SkeletonModel modelPath={models[selectedModel].path} />
+
+      {/* Texte descriptif */}
+      <div style={{ marginTop: "20px", padding: "10px", maxWidth: "600px", margin: "auto" }}>
+        <h2>{models[selectedModel].name}</h2>
+        <p>{models[selectedModel].description}</p>
+      </div>
     </div>
   );
 }
 
 export default App;
+
+
+
 
 
